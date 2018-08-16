@@ -22,17 +22,18 @@
     <div id="map" height="460px" width="100%"></div>
     <div id="form">
       <table>
-      <tr><td>Name:</td> <td><input type='text' id='name'/> </td> </tr>
+      <tr><td>Name *:</td> <td><input required type='text' id='name' /> </td> </tr>
       <tr><td>Address:</td> <td><input type='text' id='address'/> </td> </tr>
       <tr><td>Mobile:</td> <td><input type='text' id='mobile'/> </td> </tr>
       <tr><td>Type:</td> <td><select id='type'> +
                  <option value='Stranded' SELECTED>Stranded</option>
                  <option value='ME'>Medical Emergency</option>
                  </select> </td></tr>
+				 <tr><td>Note:</td> <td><textarea type='text' id='note' name="note"/> </textarea></td> </tr>
                  <tr><td></td><td><input type='button' value='Save' onclick='saveData()'/></td></tr>
       </table>
     </div>
-    <div id="message">Location saved</div>
+    <div id="message">Location saved ! Entire Nation with you</div>
     <script>
       var map;
       var marker;
@@ -82,22 +83,34 @@
             Array.prototype.forEach.call(markers, function(markerElem) {
               var id = markerElem.getAttribute('id');
               var name = markerElem.getAttribute('name');
-   var mobile = markerElem.getAttribute('mobile');
+				var mobile = markerElem.getAttribute('mobile');
               var address = markerElem.getAttribute('address');
               var type = markerElem.getAttribute('type');
+              var note = markerElem.getAttribute('note');
               var point = new google.maps.LatLng(
                   parseFloat(markerElem.getAttribute('lat')),
                   parseFloat(markerElem.getAttribute('lng')));
 
               var infowincontent = document.createElement('div');
               var strong = document.createElement('strong');
-              strong.textContent = name
+              strong.textContent = '#'+id+' '+name;
               infowincontent.appendChild(strong);
               infowincontent.appendChild(document.createElement('br'));
 
               var text = document.createElement('text');
               text.textContent = address
               infowincontent.appendChild(text);
+			  infowincontent.appendChild(document.createElement('br'));
+			  
+			  var phone = document.createElement('text');
+			  phone.textContent = 'Mobile : '+mobile;
+			  infowincontent.appendChild(phone);
+			  infowincontent.appendChild(document.createElement('br'));
+			  
+			  var note_text = document.createElement('text');
+			  note_text.textContent = 'Note : '+note;
+			  infowincontent.appendChild(note_text);
+			  
               var icon = customLabel[type] || {};
               var marker = new google.maps.Marker({
                 map: map,
@@ -140,13 +153,14 @@
       function saveData() {
         var name = escape(document.getElementById('name').value);
         var address = escape(document.getElementById('address').value);
+        var note = escape(document.getElementById('note').value);
         var mobile = escape(document.getElementById('mobile').value);
         var type = document.getElementById('type').value;
         var latlng = marker.getPosition();
         var url = 'phpsqlinfo_addrow.php?name=' + name + '&address=' + address +
-                  '&type=' + type + '&lat=' + latlng.lat() + '&lng=' + latlng.lng()+'&mobile='+mobile;
+                  '&type=' + type + '&lat=' + latlng.lat() + '&lng=' + latlng.lng()+'&mobile='+mobile+'&note='+note;
 
-        
+		if(name != ''){
           uploadUrl(url, function(data, responseCode) {
 
           if (responseCode == 200 && data.length <= 1) {
@@ -155,6 +169,11 @@
           }
         });
       }
+	   else{
+	  alert('Name is required');
+	  }
+	  }
+	 
 
 
       function downloadUrl(url, callback) {

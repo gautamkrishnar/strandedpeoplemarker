@@ -8,6 +8,7 @@ $mobile = $_GET['mobile'];
 $lat = $_GET['lat'];
 $lng = $_GET['lng'];
 $type = $_GET['type'];
+$note = $_GET['note'];
 
 // Opens a connection to a MySQL server.
 $connection=mysql_connect ("localhost", $username, $password);
@@ -23,14 +24,15 @@ if (!$db_selected) {
 
 // Inserts new row with place data.
 $query = sprintf("INSERT INTO markers " .
-         " (id, name, address, mobile, lat, lng, type ) " .
-         " VALUES (NULL, '%s','%s','%s', '%s', '%s', '%s');",
+         " (id, name, address, mobile, lat, lng, type, note ) " .
+         " VALUES (NULL, '%s','%s','%s', '%s', '%s', '%s', '%s');",
          mysql_real_escape_string($name),
          mysql_real_escape_string($address),
          mysql_real_escape_string($mobile),
          mysql_real_escape_string($lat),
          mysql_real_escape_string($lng),
-         mysql_real_escape_string($type));
+         mysql_real_escape_string($type),
+		  mysql_real_escape_string($note));
 
 $result = mysql_query($query);
 

@@ -43,10 +43,11 @@ while ($row = @mysql_fetch_assoc($result)){
   echo 'id="' . $row['id'] . '" ';
   echo 'name="' . parseToXML($row['name']) . '" ';
   echo 'address="' . parseToXML($row['address']) . '" ';
- echo 'mobile="' . $row['mobile'] . '" ';
+  echo 'mobile="' . $row['mobile'] . '" ';
   echo 'lat="' . $row['lat'] . '" ';
   echo 'lng="' . $row['lng'] . '" ';
   echo 'type="' . $row['type'] . '" ';
+  echo 'note="' . $row['note'] . '" ';
   echo '/>';
   $ind = $ind + 1;
 }
